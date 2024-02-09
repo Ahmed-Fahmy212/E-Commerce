@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const  router  = require('./routes/main');
+const  router  = require('./src/main');
 const prisma = new PrismaClient();
 const app = express();
 
