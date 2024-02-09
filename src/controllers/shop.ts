@@ -1,7 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+import prisma from '../util/prisma'
 
-exports.getProduct = async (req, res, next) => {
+export const getProduct = async (req: any, res: any, next: any) => {
   const prodId = parseInt(req.params.productId);
   try {
     const product = await prisma.product.findOne({
@@ -15,7 +14,7 @@ exports.getProduct = async (req, res, next) => {
   }
 };
 
-exports.getIndex = async (req, res, next) => {
+export const getIndex = async (req: any, res: any, next: any) => {
   try {
     const products = await prisma.product.findMany();
     res.json(products);
@@ -24,7 +23,7 @@ exports.getIndex = async (req, res, next) => {
   }
 };
 
-exports.getCart = async (req, res, next) => {
+export const getCart = async (req: any, res: any, next: any) => {
   try {
     const cart = await prisma.cart.findUnique({
       where: {
@@ -44,7 +43,7 @@ exports.getCart = async (req, res, next) => {
   }
 };
 
-exports.postCart = async (req, res, next) => {
+export const postCart = async (req: any, res: any, next: any) => {
   const prodId = parseInt(req.body.productId);
   let fetchedCart;
   try {
@@ -115,7 +114,7 @@ exports.postCart = async (req, res, next) => {
   }
 };
 
-exports.postCartDeleteProduct = async (req, res, next) => {
+export const postCartDeleteProduct = async (req: any, res: any, next: any) => {
   const prodId = parseInt(req.body.productId);
   try {
     const item = await prisma.cartItem.findUnique({
@@ -139,8 +138,9 @@ exports.postCartDeleteProduct = async (req, res, next) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 // Create a new order for the user and add the products in the cart to the order
-exports.postOrder = async (req, res, next) => {
+export const postOrder = async (req: any, res: any, next: any) => {
   let fetchedCart;
   try {
     const cart = await prisma.cart.findUnique({ //user cart which have products now
@@ -156,7 +156,7 @@ exports.postOrder = async (req, res, next) => {
       },
     });
     fetchedCart = cart;
-    const products = cart.cartItems.map((cartItem) => {
+    const products = cart.cartItems.map((cartItem: any) => {
       return {
         id: cartItem.product.id,
         quantity: cartItem.quantity,
@@ -170,7 +170,7 @@ exports.postOrder = async (req, res, next) => {
           },
         },
         products: {
-          create: products.map((product) => {
+          create: products.map((product: any) => {
             return {
               quantity: product.quantity,
               product: {
@@ -201,7 +201,7 @@ exports.postOrder = async (req, res, next) => {
 };
 
 // Get all orders for the user, including the associated products
-exports.getOrders = async (req, res, next) => {
+export const getOrders = async (req: any, res: any, next: any) => {
   try {
     const orders = await prisma.order.findMany({
       where: {

@@ -1,13 +1,13 @@
-const { validationResult } = require('express-validator/check');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+import { Request, Response, NextFunction } from 'express';
+import { validationResult } from 'express-validator';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import prisma from '../util/prisma';
 
-exports.signup = async (req, res, next) => {
+export const signup = async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error('Validation failed.');
+    const error = new Error('Validation failed.') as any;
     error.statusCode = 422;
     error.data = errors.array();
     throw error;
@@ -31,18 +31,18 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   try {
     const loadedUser = await prisma.user.findUnique({ where: { email: email } });
     if (!loadedUser) {
-      const error = new Error('A user with this email could not be found.');
+      const error = new Error('A user with this email could not be found.') as any;
       error.statusCode = 401;
       throw error;
     }
     const isEqual = await bcrypt.compare(password, loadedUser.password);
     if (!isEqual) {
-      const error = new Error('Wrong password!');
+      const error = new Error('Wrong password!') as any;
       error.statusCode = 401;
       throw error;
     }
@@ -63,11 +63,11 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.getUserStatus = async (req, res, next) => {
+export const getUserStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: Number(req.userId) } });
     if (!user) {
-      const error = new Error('User not found.');
+      const error = new Error('User not found.') as any;
       error.statusCode = 404;
       throw error;
     }
@@ -80,12 +80,12 @@ exports.getUserStatus = async (req, res, next) => {
   }
 };
 
-exports.updateUserStatus = async (req, res, next) => {
+export const updateUserStatus = async (req: Request, res: Response, next: NextFunction) => {
   const newStatus = req.body.status;
   try {
     const user = await prisma.user.findUnique({ where: { id: Number(req.userId) } });
     if (!user) {
-      const error = new Error('User not found.');
+      const error = new Error('User not found.') as any;
       error.statusCode = 404;
       throw error;
     }

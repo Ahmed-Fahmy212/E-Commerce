@@ -1,9 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient();
+import prisma from '../util/prisma';
 
-
-//prisma and crud and authintication 
 exports.postAddProduct =async (req, res, next) => {
   const {title , price , imageUrl , description } = req.body;
  try {
