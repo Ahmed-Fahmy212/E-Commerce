@@ -21,21 +21,6 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// const { PrismaClient } = require('@prisma/client');
-// const prisma = new PrismaClient();
-
-// app.use(async (req, res, next) => { //convert into real user
-//   try {
-//     const user = await prisma.user.findUnique({ where: { id: 1 } });
-//     req.user = user;
-//     next();
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
-// authentication =>
-
 app.use('/admin', adminRoutes);
 app.use(authRoutes);
 app.use(shopRoutes);
