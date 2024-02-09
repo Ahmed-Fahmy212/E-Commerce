@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "start-server": "node app.js"
+    "start-server": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
@@ -16,7 +17,8 @@
     "nodemon": "^1.18.3",
     "prisma": "^5.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "run": "nodemon"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
