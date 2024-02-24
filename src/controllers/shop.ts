@@ -3,7 +3,7 @@ import prisma from '../util/prisma'
 export const getProduct = async (req: any, res: any, next: any) => {
   const prodId = parseInt(req.params.productId);
   try {
-    const product = await prisma.product.findOne({
+    const product = await prisma.product.findFirst({
       where: {
         id: prodId,
       },
@@ -25,9 +25,10 @@ export const getIndex = async (req: any, res: any, next: any) => {
 
 export const getCart = async (req: any, res: any, next: any) => {
   try {
-    const cart = await prisma.cart.findUnique({
+    
+    const cart = await prisma.cart.findFirst({
       where: {
-        userId: req.user.id,
+        userId: +req.user.id,
       },
       include: {
         cartItems: {
@@ -47,7 +48,7 @@ export const postCart = async (req: any, res: any, next: any) => {
   const prodId = parseInt(req.body.productId);
   let fetchedCart;
   try {
-    const cart = await prisma.cart.findUnique({
+    const cart = await prisma.cart.findFirst({
       where: {
         userId: req.user.id,
       },
@@ -71,10 +72,10 @@ export const postCart = async (req: any, res: any, next: any) => {
     }
 
     if (product) {
-      const item = await prisma.cartItem.findUnique({
+      const item = await prisma.cartItem.findFirst({
         where: {
             productId: product.id,
-            cartId: cart.id,
+            cartId: cart?.id,
         },
       });
       if (item) {
@@ -98,7 +99,7 @@ export const postCart = async (req: any, res: any, next: any) => {
             },
             cart: {
               connect: {
-                id: cart.id,
+                id: cart?.id,
               },
             },
           },
@@ -117,7 +118,7 @@ export const postCart = async (req: any, res: any, next: any) => {
 export const postCartDeleteProduct = async (req: any, res: any, next: any) => {
   const prodId = parseInt(req.body.productId);
   try {
-    const item = await prisma.cartItem.findUnique({
+    const item = await prisma.cartItem.findFirst({
       where: {
         
           productId: prodId,
@@ -143,7 +144,7 @@ export const postCartDeleteProduct = async (req: any, res: any, next: any) => {
 export const postOrder = async (req: any, res: any, next: any) => {
   let fetchedCart;
   try {
-    const cart = await prisma.cart.findUnique({ //user cart which have products now
+    const cart = await prisma.cart.findFirst({ //user cart which have products now
       where: {
         userId: req.user.id,
       },
@@ -156,7 +157,7 @@ export const postOrder = async (req: any, res: any, next: any) => {
       },
     });
     fetchedCart = cart;
-    const products = cart.cartItems.map((cartItem: any) => {
+    const products = cart?.cartItems.map((cartItem: any) => {
       return {
         id: cartItem.product.id,
         quantity: cartItem.quantity,
@@ -169,8 +170,8 @@ export const postOrder = async (req: any, res: any, next: any) => {
             id: req.user.id,
           },
         },
-        products: {
-          create: products.map((product: any) => {
+        orderItems: {
+          create: products?.map((product: any) => {
             return {
               quantity: product.quantity,
               product: {
@@ -208,7 +209,7 @@ export const getOrders = async (req: any, res: any, next: any) => {
         userId: req.user.id,
       },
       include: {
-        products: {
+        orderItems: {
           include: {
             product: true,
           },

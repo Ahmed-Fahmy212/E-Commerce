@@ -24,10 +24,11 @@ model Product {
   price       Float      
   imageUrl    String?
   description String?
-  userId      Int
+  userId      Int  
   user        User        @relation(fields: [userId], references: [id])
   cartItems   CartItem[]
   orderItems  OrderItem[]
+
 }
 
 model Cart {

@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+ const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.get("Authorization");
+  console.log("💛 ",authHeader);
   if (!authHeader) {
     const error = new Error("Not authenticated.");
     (error as any).statusCode = 401;
@@ -16,7 +17,7 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
       (error as any).statusCode = 401;
       throw error;
     }
-    const secret = process.env.JWT_SECRET || "";
+    const secret = process.env.JWT_SECRET || (() => { throw new Error("No secret found."); });
     decodedToken = jwt.verify(token, secret);
   } catch (err) {
     (err as any).statusCode = 500;

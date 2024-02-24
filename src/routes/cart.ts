@@ -7,12 +7,14 @@ const router: Router = Router();
 
 router.get("/", getIndex);
 
-router.get("/cart", isAuth, getCart);
 
-router.post("/cart", isAuth, postCart);
+router.use(isAuth)
+router.get("/cart", getCart);
 
-router.post("/cart-delete-item", isAuth, postCartDeleteProduct);
+router.post("/cart", postCart);
 
-router.post("/create-order", isAuth, postOrder);
+router.post("/cart-delete-item", postCartDeleteProduct);
+
+router.post("/create-order", postOrder);
 
 export { router as cartsRouter };
